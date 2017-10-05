@@ -6,7 +6,7 @@ To provide practice implementing Recursive Bayesian Estimation to track the beli
 
 ## Installation of Pre-requisites
 
-- The first step is to be able to run the desktop-full verison of ROS Kinetic (www.ros.org) as well as Gazebo v7 or v8. 
+- The first step is to be able to run the desktop-full verison of ROS Kinetic (www.ros.org) as well as Gazebo v7 (v8 likely works as well, but not fully tested). 
   - If you are installing ROS locally on your machine, dont forget the final step which is to source ROS's setup.bash. 
   - To verify your install, each of the following should run without error:
      - roscore
