@@ -72,7 +72,7 @@ Are you able to track the robo-boogie you had in mind?
 
 ## Hints and Information:
 
-You may find it speeds development to create an "overlay" catkin workspace that contains only the comp417_assign2 package, avoiding unnecessary recompiling of the support packages:
+You may find it speeds development to create an "overlay" catkin workspace that contains only the comp765_assign1 package, avoiding unnecessary recompiling of the support packages:
 
 - Start in a terminal that has sourced the setup.bash from the full assignment code
 - Make a fresh directory outside any other catkin workspace (perhaps called a1_overlay_ws) 
