@@ -4,17 +4,20 @@
 
 To provide practice implementing Recursive Bayesian Estimation to track the belief of a robot's position over time using quasi-realistic motion and sensing models. The most common choice to solve this assignment will be to implement a particle filter that is composed of propagation, measurement, and re-sampling steps.
 
+## Installation of Pre-requisites
+
+- The first step is to be able to run the desktop-full verison of ROS Kinetic (www.ros.org) as well as Gazebo v7 or v8. 
+  - If you are installing ROS locally on your machine, dont forget the final step which is to source ROS's setup.bash. 
+  - To verify your install, each of the following should run without error:
+     - roscore
+     - roscd (changes your directory to /opt/ros/kinetic)
+     - rosrun gazebo_ros gazebo (brings up the GUI for the simulator of an empty world)
+     - rqt_image_view
+
 ## Getting started with the provided code 
 
-- Ensure that you have installed the desktop-full verison of ROS Kinetic (www.ros.org). Dont forget the final step which is to source ROS's setup.bash. To verify your install, each of the following should work, in no particular order:
-  - roscore
-  - roscd (changes your directory to /opt/ros/kinetic)
-  - rosrun gazebo_ros gazebo (brings up the GUI for the simulator of an empty world)
-  - rqt_image_view
-- If at trottier, run this command:
-  - source /opt/ros/kinetic/setup.bash >> ~/.bashrc
 - Obtain and compile the assignment code and add it to your ROS environment: 
-  - git clone https://ghub.cs.mcgill.ca/COMP765/Assignment1.git
+  - git clone https://github.com/COMP765-Fall2017/Assignment1.git
   - cd Assignment1 
   - catkin_make (if problems, try again with -j1 flag)
   - echo source $(pwd)/devel/setup.bash >> ~/.bashrc 
