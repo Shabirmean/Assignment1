@@ -13,6 +13,7 @@ To provide practice implementing Recursive Bayesian Estimation to track the beli
      - roscd (changes your directory to /opt/ros/kinetic)
      - rosrun gazebo_ros gazebo (brings up the GUI for the simulator of an empty world)
      - rqt_image_view
+- If your local installation does not support installing ROS, using Docker can be a good option. This document holds some tips and information for that: https://docs.google.com/document/d/1Sk8iTkQfpVCFwLxqWrynEXxaGmkHaGNf4uuD96kvF5o/edit?usp=sharing     
 
 ## Getting started with the provided code 
 
