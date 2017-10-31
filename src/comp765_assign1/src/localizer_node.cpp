@@ -13,6 +13,9 @@
 #define HEADING_GRAPHIC_LENGTH 50.0
 #define PARTICLE_COUNT 1000
 #define SEGMENTS 2
+#define FORWARD_NOISE 0.05
+#define TURN_NOISE 0.05
+#define IMAGE_NOISE 5.0
 
 struct noise {
   float forward_noise;
@@ -67,7 +70,7 @@ public:
     motion_command_sub = nh.subscribe<geometry_msgs::PoseStamped>("/aqua/target_pose", 1, &Localizer::motionCommandCallback, this);
 
     // initialize particles
-    initParticles(0.05, 0.05, 5.0);
+    initParticles(FORWARD_NOISE, TURN_NOISE, IMAGE_NOISE);
 
     ROS_INFO( "localizer node constructed and subscribed." );
   }
@@ -169,6 +172,7 @@ public:
   void robotImageCallback( const sensor_msgs::ImageConstPtr& robot_img ){
     // Update particle weights based on the probability of the accuracy of
     // the new measurment apporimated to a Normal Distribution.
+    
     cv_bridge::CvImagePtr rcv_msg = cv_bridge::toCvCopy(robot_img, sensor_msgs::image_encodings::BGR8);
     cv::Mat robot_image_mat = rcv_msg->image;
 
@@ -207,7 +211,7 @@ public:
       particles[i] = new_particles[i];
     }
 
-    //localization_result_image = map_image.clone();
+    // localization_result_image = map_image.clone();
     // for (size_t i = 0; i < PARTICLE_COUNT; i++) {
     //   particle p = particles[i];
     //   int x_location = p.particle_location.pose.position.x;
@@ -240,16 +244,21 @@ public:
   //
   void motionCommandCallback(const geometry_msgs::PoseStamped::ConstPtr& motion_command ){
 
-    geometry_msgs::PoseStamped command = *motion_command;
+   geometry_msgs::PoseStamped command = *motion_command;
     double target_roll, target_pitch, target_yaw;
     tf::Quaternion target_orientation;
     tf::quaternionMsgToTF(command.pose.orientation, target_orientation);
     tf::Matrix3x3(target_orientation).getEulerYPR( target_yaw, target_pitch, target_roll );
 
+    //printf("X Speed - %.5f\n", command.pose.position.x);
+    
     // The following three lines implement the basic motion model example
-    //estimated_location.pose.position.x = estimated_location.pose.position.x + FORWARD_SWIM_SPEED_SCALING * command.pose.position.x * cos( -target_yaw );
-    //estimated_location.pose.position.y = estimated_location.pose.position.y + FORWARD_SWIM_SPEED_SCALING * command.pose.position.x * sin( -target_yaw );
-    //estimated_location.pose.orientation = command.pose.orientation;
+    // estimated_location.pose.position.x = estimated_location.pose.position.x + FORWARD_SWIM_SPEED_SCALING * command.pose.position.x * cos( -target_yaw );
+    // estimated_location.pose.position.y = estimated_location.pose.position.y + FORWARD_SWIM_SPEED_SCALING * command.pose.position.x * sin( -target_yaw );
+    // estimated_location.pose.orientation = command.pose.orientation;
+
+    //printf("X Loc - %.5f & Y Loc - %.5f\n", estimated_location.pose.position.x, estimated_location.pose.position.y);
+
 
     int max_weighted_particle = -1;
     float max_weight = 0.0;
@@ -258,11 +267,15 @@ public:
       particle p = particles[i];
       int p_X_loc = p.particle_location.pose.position.x;
       int p_Y_loc = p.particle_location.pose.position.y;
+      
+      p_X_loc /= METRE_TO_PIXEL_SCALE;
+      p_Y_loc /= METRE_TO_PIXEL_SCALE;
+
       p_X_loc = p_X_loc + FORWARD_SWIM_SPEED_SCALING * command.pose.position.x * cos( -target_yaw );
       p_Y_loc = p_Y_loc + FORWARD_SWIM_SPEED_SCALING * command.pose.position.x * sin( -target_yaw );
 
-      particles[i].particle_location.pose.position.x = p_X_loc;
-      particles[i].particle_location.pose.position.y = p_Y_loc;
+      particles[i].particle_location.pose.position.x = p_X_loc * METRE_TO_PIXEL_SCALE;
+      particles[i].particle_location.pose.position.y = p_Y_loc * METRE_TO_PIXEL_SCALE;
       particles[i].particle_location.pose.orientation = command.pose.orientation;
 
       if (particles[i].weight > max_weight) {
@@ -275,14 +288,18 @@ public:
     estimated_location.pose.position.y = particles[max_weighted_particle].particle_location.pose.position.y;
     estimated_location.pose.orientation = particles[max_weighted_particle].particle_location.pose.orientation;
 
+
     // The remainder of this function is sample drawing code to plot your answer on the map image.
 
     // This line resets the image to the original map so you can start drawing fresh each time.
     // Comment the one following line to plot your whole trajectory
     localization_result_image = map_image.clone();
 
-    int estimated_robo_image_x = localization_result_image.size().width/2 + METRE_TO_PIXEL_SCALE * estimated_location.pose.position.x;
-    int estimated_robo_image_y = localization_result_image.size().height/2 + METRE_TO_PIXEL_SCALE * estimated_location.pose.position.y;
+    int estimated_robo_image_x = localization_result_image.size().width/2 + estimated_location.pose.position.x;
+    int estimated_robo_image_y = localization_result_image.size().height/2 + estimated_location.pose.position.y;
+
+    // int estimated_robo_image_x = localization_result_image.size().width/2 + METRE_TO_PIXEL_SCALE * estimated_location.pose.position.x;
+    // int estimated_robo_image_y = localization_result_image.size().height/2 + METRE_TO_PIXEL_SCALE * estimated_location.pose.position.y;
 
     int estimated_heading_image_x = estimated_robo_image_x + HEADING_GRAPHIC_LENGTH * cos(-target_yaw);
     int estimated_heading_image_y = estimated_robo_image_y + HEADING_GRAPHIC_LENGTH * sin(-target_yaw);

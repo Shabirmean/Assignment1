@@ -1,0 +1,29 @@
+\subsubsection parameters ROS parameters
+
+Reads and maintains the following parameters on the ROS server
+
+- \b "~ROLL_P_GAIN" : \b [double] Proportional gain for roll min: -5.0, default: 1.0, max: 5.0
+- \b "~PITCH_P_GAIN" : \b [double] Proportional gain for pitch min: -5.0, default: 1.0, max: 5.0
+- \b "~YAW_P_GAIN" : \b [double] Proportional gain for yaw min: -5.0, default: -1.5, max: 5.0
+- \b "~ROLL_I_GAIN" : \b [double] Integral gain for roll min: -5.0, default: 0.0, max: 5.0
+- \b "~PITCH_I_GAIN" : \b [double] Integral gain for pitch min: -5.0, default: 0.0, max: 5.0
+- \b "~YAW_I_GAIN" : \b [double] Integral gain for yaw min: -5.0, default: 0.0, max: 5.0
+- \b "~ROLL_D_GAIN" : \b [double] Derivative gain for roll min: -5.0, default: 0.0, max: 5.0
+- \b "~PITCH_D_GAIN" : \b [double] Derivative gain for pitch min: -5.0, default: 0.0, max: 5.0
+- \b "~YAW_D_GAIN" : \b [double] Derivative gain for yaw min: -5.0, default: 0.0, max: 5.0
+- \b "~ROLL_CONST_GAIN" : \b [double] Constant gain for roll, useful when heaving sideways min: -5.0, default: 0.0, max: 5.0
+- \b "~ROLL_D_FILTER_PERIOD" : \b [double] Time period for roll deriv exp filtering (s) min: 0.0, default: 0.0, max: 10.0
+- \b "~PITCH_D_FILTER_PERIOD" : \b [double] Time period for pitch deriv exp filtering (s) min: 0.0, default: 0.0, max: 10.0
+- \b "~YAW_D_FILTER_PERIOD" : \b [double] Time period for yaw deriv exp filtering (s) min: 0.0, default: 0.0, max: 10.0
+- \b "~MAX_INTEGRAL_ANGLE_ERROR" : \b [double] Maximum value for angle integration min: -10.0, default: 0.0, max: 10.0
+- \b "~KSPEED" : \b [double] Proportional gain for forward velocity min: -3.0, default: 1.0, max: 3.0
+- \b "~KHEAVE" : \b [double] Proportional gain for heave velocity min: -3.0, default: 1.0, max: 3.0
+- \b "~KDEPTH" : \b [double] Proportional gain for depth change min: -10.0, default: -1.0, max: 10.0
+- \b "~DEPTH_D_GAIN" : \b [double] Derivative gain for depth change min: -10.0, default: 0.0, max: 10.0
+- \b "~DEPTH_D_FILTER_PERIOD" : \b [double] Time period for depth deriv exp filtering (s) min: 0.0, default: 0.0, max: 10.0
+- \b "~MAX_ROLL" : \b [double] Saturation threshold for roll, in radians min: 0.0, default: 1.0, max: 1.6
+- \b "~MAX_PITCH" : \b [double] Saturation threshold for pitch, in radians min: 0.0, default: 1.0, max: 1.6
+- \b "~MAX_YAW" : \b [double] Saturation threshold for yaw, in radians min: 0.0, default: 1.0, max: 1.6
+- \b "~MAX_SPEED" : \b [double] Saturation threshold for speed, in pseudo-velocity min: 0.0, default: 1.0, max: 1.0
+- \b "~MAX_HEAVE" : \b [double] Saturation threshold for heave, in pseudo-velocity min: 0.0, default: 1.0, max: 1.0
+

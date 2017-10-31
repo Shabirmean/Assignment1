@@ -1,0 +1,17 @@
+-I/home/shabirmean/Desktop/COMP765/Assignment1/devel/include
+-I/home/shabirmean/Desktop/COMP765/Assignment1/devel/include
+-I/opt/ros/kinetic/include
+-I/opt/ros/kinetic/share/xmlrpcpp/cmake/../../../include/xmlrpcpp
+-I/usr/include
+-I/home/shabirmean/Desktop/COMP765/Assignment1/src/aqua_gait/include
+-I/home/shabirmean/Desktop/COMP765/Assignment1/src/aqua_gait
+-I/home/shabirmean/Desktop/COMP765/Assignment1/build/aqua_gait
+-DROS_BUILD_SHARED_LIBS=1
+-DROS_PACKAGE_NAME="aqua_gait"
+-DROSCONSOLE_BACKEND_LOG4CXX
+-DQT_WIDGETS_LIB
+-DQT_GUI_LIB
+-DQT_CORE_LIB
+-o
+/home/shabirmean/Desktop/COMP765/Assignment1/build/aqua_gait/include/aqua_gait/moc_QTestGaitsGUI.cpp
+/home/shabirmean/Desktop/COMP765/Assignment1/src/aqua_gait/include/aqua_gait/QTestGaitsGUI.hpp

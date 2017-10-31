@@ -1,0 +1,11 @@
+\subsubsection parameters ROS parameters
+
+Reads and maintains the following parameters on the ROS server
+
+- \b "~density" : \b [double] Fluid density min: 900.0, default: 997.0, max: 1100.0
+- \b "~viscosity" : \b [double] Fluid viscosity min: 0.0, default: 12.5, max: 20.0
+- \b "~wobble" : \b [double] Kirchoff Tensor Wobble Parameter min: -4.0, default: 1.2, max: 4.0
+- \b "~drag_scaling" : \b [double] Drag scaling Parameter min: -4.0, default: 1.2, max: 4.0
+- \b "~thrustK1" : \b [double] Linear Thrust Slope min: 0.0, default: 0.3, max: 2.0
+- \b "~thrustK2" : \b [double] Linear Thrust Bias min: -1.0, default: 0.0, max: 1.0
+

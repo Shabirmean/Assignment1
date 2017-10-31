@@ -1,0 +1,10 @@
+\subsubsection usage Usage
+\verbatim
+<node name="DepthFilterNode" pkg="aquadepth" type="DepthFilterNode">
+  <param name="min_window_entries" type="int" value="4" />
+  <param name="window_size_sec" type="double" value="2.0" />
+  <param name="cutoff_sigma_multiplier" type="double" value="3.0" />
+  <param name="N_sigma_cutoff_m" type="double" value="0.15" />
+</node>
+\endverbatim
+

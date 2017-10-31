@@ -1,0 +1,8 @@
+prefix=/home/shabirmean/Desktop/COMP765/Assignment1/install
+
+Name: aqua_description
+Description: Description of aqua_description
+Version: 1.0.0
+Cflags: 
+Libs: -L/home/shabirmean/Desktop/COMP765/Assignment1/install/lib 
+Requires: roscpp xacro urdf angles aquacore

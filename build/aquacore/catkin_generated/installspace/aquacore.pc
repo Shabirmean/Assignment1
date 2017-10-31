@@ -1,0 +1,8 @@
+prefix=/home/shabirmean/Desktop/COMP765/Assignment1/install
+
+Name: aquacore
+Description: Description of aquacore
+Version: 1.0.0
+Cflags: -I/home/shabirmean/Desktop/COMP765/Assignment1/install/include
+Libs: -L/home/shabirmean/Desktop/COMP765/Assignment1/install/lib 
+Requires: roscpp rospy actionlib message_runtime actionlib_msgs std_msgs std_srvs geometry_msgs sensor_msgs

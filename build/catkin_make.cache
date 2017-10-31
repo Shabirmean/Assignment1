@@ -1,0 +1,2 @@
+aqua_description:aqua_gait:aqua_gazebo:aquaautopilot:aquacore:aquadepth:aquajoy:comp765_assign1
+-DCATKIN_DEVEL_PREFIX=/home/shabirmean/Desktop/COMP765/Assignment1/devel -DCMAKE_INSTALL_PREFIX=/home/shabirmean/Desktop/COMP765/Assignment1/install -G Unix Makefiles

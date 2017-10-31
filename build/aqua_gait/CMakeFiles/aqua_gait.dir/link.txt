@@ -1,0 +1,1 @@
+/usr/bin/c++  -fPIC -std=c++0x  -g -Wall -O2 -Wno-unused-result -fPIC  -shared -Wl,-soname,libaqua_gait.so -o /home/shabirmean/Desktop/COMP765/Assignment1/devel/lib/libaqua_gait.so CMakeFiles/aqua_gait.dir/src/Gaits.cpp.o 

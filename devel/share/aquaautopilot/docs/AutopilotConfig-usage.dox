@@ -1,0 +1,30 @@
+\subsubsection usage Usage
+\verbatim
+<node name="aqua_local_autopilot" pkg="aquaautopilot" type="aqua_local_autopilot">
+  <param name="ROLL_P_GAIN" type="double" value="1.0" />
+  <param name="PITCH_P_GAIN" type="double" value="1.0" />
+  <param name="YAW_P_GAIN" type="double" value="-1.5" />
+  <param name="ROLL_I_GAIN" type="double" value="0.0" />
+  <param name="PITCH_I_GAIN" type="double" value="0.0" />
+  <param name="YAW_I_GAIN" type="double" value="0.0" />
+  <param name="ROLL_D_GAIN" type="double" value="0.0" />
+  <param name="PITCH_D_GAIN" type="double" value="0.0" />
+  <param name="YAW_D_GAIN" type="double" value="0.0" />
+  <param name="ROLL_CONST_GAIN" type="double" value="0.0" />
+  <param name="ROLL_D_FILTER_PERIOD" type="double" value="0.0" />
+  <param name="PITCH_D_FILTER_PERIOD" type="double" value="0.0" />
+  <param name="YAW_D_FILTER_PERIOD" type="double" value="0.0" />
+  <param name="MAX_INTEGRAL_ANGLE_ERROR" type="double" value="0.0" />
+  <param name="KSPEED" type="double" value="1.0" />
+  <param name="KHEAVE" type="double" value="1.0" />
+  <param name="KDEPTH" type="double" value="-1.0" />
+  <param name="DEPTH_D_GAIN" type="double" value="0.0" />
+  <param name="DEPTH_D_FILTER_PERIOD" type="double" value="0.0" />
+  <param name="MAX_ROLL" type="double" value="1.0" />
+  <param name="MAX_PITCH" type="double" value="1.0" />
+  <param name="MAX_YAW" type="double" value="1.0" />
+  <param name="MAX_SPEED" type="double" value="1.0" />
+  <param name="MAX_HEAVE" type="double" value="1.0" />
+</node>
+\endverbatim
+

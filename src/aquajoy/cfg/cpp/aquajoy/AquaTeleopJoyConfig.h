@@ -55,10 +55,10 @@ namespace aquajoy
     class ParamDescription : public AbstractParamDescription
     {
     public:
-      ParamDescription(std::string name, std::string type, uint32_t level, 
-          std::string description, std::string edit_method, T AquaTeleopJoyConfig::* f) :
-        AbstractParamDescription(name, type, level, description, edit_method),
-        field(f)
+      ParamDescription(std::string a_name, std::string a_type, uint32_t a_level, 
+          std::string a_description, std::string a_edit_method, T AquaTeleopJoyConfig::* a_f) :
+        AbstractParamDescription(a_name, a_type, a_level, a_description, a_edit_method),
+        field(a_f)
       {}
 
       T (AquaTeleopJoyConfig::* field);
@@ -141,7 +141,7 @@ namespace aquajoy
     class GroupDescription : public AbstractGroupDescription
     {
     public:
-      GroupDescription(std::string name, std::string type, int parent, int id, bool s, T PT::* f) : AbstractGroupDescription(name, type, parent, id, s), field(f)
+      GroupDescription(std::string a_name, std::string a_type, int a_parent, int a_id, bool a_s, T PT::* a_f) : AbstractGroupDescription(a_name, a_type, a_parent, a_id, a_s), field(a_f)
       {
       }
 
@@ -270,37 +270,37 @@ double max_depth_vel;
 
 
 
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       double joy_axis_deadzone;
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       double max_speed_cmd;
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       double max_heave_cmd;
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       double max_roll_cmd;
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       double max_pitch_cmd;
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       double max_yaw_cmd;
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       double max_roll_pos;
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       double max_pitch_pos;
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       double max_yaw_pos;
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       double min_depth;
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       double max_depth;
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       double default_fixed_depth;
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       double max_roll_vel;
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       double max_pitch_vel;
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       double max_yaw_vel;
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       double max_depth_vel;
 //#line 218 "/opt/ros/kinetic/share/dynamic_reconfigure/templates/ConfigType.h.template"
 
@@ -427,6 +427,9 @@ double max_depth_vel;
   template <> // Max and min are ignored for strings.
   inline void AquaTeleopJoyConfig::ParamDescription<std::string>::clamp(AquaTeleopJoyConfig &config, const AquaTeleopJoyConfig &max, const AquaTeleopJoyConfig &min) const
   {
+    (void) config;
+    (void) min;
+    (void) max;
     return;
   }
 
@@ -437,171 +440,171 @@ double max_depth_vel;
     AquaTeleopJoyConfigStatics()
     {
 AquaTeleopJoyConfig::GroupDescription<AquaTeleopJoyConfig::DEFAULT, AquaTeleopJoyConfig> Default("Default", "", 0, 0, true, &AquaTeleopJoyConfig::groups);
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       __min__.joy_axis_deadzone = 0.0;
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       __max__.joy_axis_deadzone = 1.0;
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       __default__.joy_axis_deadzone = 0.15;
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       Default.abstract_parameters.push_back(AquaTeleopJoyConfig::AbstractParamDescriptionConstPtr(new AquaTeleopJoyConfig::ParamDescription<double>("joy_axis_deadzone", "double", 0, "Deadzone range on individual joypad analog axes", "", &AquaTeleopJoyConfig::joy_axis_deadzone)));
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       __param_descriptions__.push_back(AquaTeleopJoyConfig::AbstractParamDescriptionConstPtr(new AquaTeleopJoyConfig::ParamDescription<double>("joy_axis_deadzone", "double", 0, "Deadzone range on individual joypad analog axes", "", &AquaTeleopJoyConfig::joy_axis_deadzone)));
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       __min__.max_speed_cmd = 0.0;
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       __max__.max_speed_cmd = 1.0;
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       __default__.max_speed_cmd = 1.0;
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       Default.abstract_parameters.push_back(AquaTeleopJoyConfig::AbstractParamDescriptionConstPtr(new AquaTeleopJoyConfig::ParamDescription<double>("max_speed_cmd", "double", 0, "Maximum speed command magnitude [for all modes]", "", &AquaTeleopJoyConfig::max_speed_cmd)));
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       __param_descriptions__.push_back(AquaTeleopJoyConfig::AbstractParamDescriptionConstPtr(new AquaTeleopJoyConfig::ParamDescription<double>("max_speed_cmd", "double", 0, "Maximum speed command magnitude [for all modes]", "", &AquaTeleopJoyConfig::max_speed_cmd)));
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       __min__.max_heave_cmd = 0.0;
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       __max__.max_heave_cmd = 1.0;
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       __default__.max_heave_cmd = 1.0;
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       Default.abstract_parameters.push_back(AquaTeleopJoyConfig::AbstractParamDescriptionConstPtr(new AquaTeleopJoyConfig::ParamDescription<double>("max_heave_cmd", "double", 0, "Maximum heave command magnitude [for non-depth-reg. modes]", "", &AquaTeleopJoyConfig::max_heave_cmd)));
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       __param_descriptions__.push_back(AquaTeleopJoyConfig::AbstractParamDescriptionConstPtr(new AquaTeleopJoyConfig::ParamDescription<double>("max_heave_cmd", "double", 0, "Maximum heave command magnitude [for non-depth-reg. modes]", "", &AquaTeleopJoyConfig::max_heave_cmd)));
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       __min__.max_roll_cmd = 0.0;
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       __max__.max_roll_cmd = 1.0;
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       __default__.max_roll_cmd = 1.0;
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       Default.abstract_parameters.push_back(AquaTeleopJoyConfig::AbstractParamDescriptionConstPtr(new AquaTeleopJoyConfig::ParamDescription<double>("max_roll_cmd", "double", 0, "Maximum roll command magnitude [for non-AP mode]", "", &AquaTeleopJoyConfig::max_roll_cmd)));
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       __param_descriptions__.push_back(AquaTeleopJoyConfig::AbstractParamDescriptionConstPtr(new AquaTeleopJoyConfig::ParamDescription<double>("max_roll_cmd", "double", 0, "Maximum roll command magnitude [for non-AP mode]", "", &AquaTeleopJoyConfig::max_roll_cmd)));
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       __min__.max_pitch_cmd = 0.0;
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       __max__.max_pitch_cmd = 1.0;
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       __default__.max_pitch_cmd = 1.0;
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       Default.abstract_parameters.push_back(AquaTeleopJoyConfig::AbstractParamDescriptionConstPtr(new AquaTeleopJoyConfig::ParamDescription<double>("max_pitch_cmd", "double", 0, "Maximum pitch command magnitude [for non-AP mode]", "", &AquaTeleopJoyConfig::max_pitch_cmd)));
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       __param_descriptions__.push_back(AquaTeleopJoyConfig::AbstractParamDescriptionConstPtr(new AquaTeleopJoyConfig::ParamDescription<double>("max_pitch_cmd", "double", 0, "Maximum pitch command magnitude [for non-AP mode]", "", &AquaTeleopJoyConfig::max_pitch_cmd)));
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       __min__.max_yaw_cmd = 0.0;
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       __max__.max_yaw_cmd = 1.0;
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       __default__.max_yaw_cmd = 1.0;
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       Default.abstract_parameters.push_back(AquaTeleopJoyConfig::AbstractParamDescriptionConstPtr(new AquaTeleopJoyConfig::ParamDescription<double>("max_yaw_cmd", "double", 0, "Maximum yaw command magnitude [for non-AP mode]", "", &AquaTeleopJoyConfig::max_yaw_cmd)));
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       __param_descriptions__.push_back(AquaTeleopJoyConfig::AbstractParamDescriptionConstPtr(new AquaTeleopJoyConfig::ParamDescription<double>("max_yaw_cmd", "double", 0, "Maximum yaw command magnitude [for non-AP mode]", "", &AquaTeleopJoyConfig::max_yaw_cmd)));
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       __min__.max_roll_pos = -180.0;
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       __max__.max_roll_pos = 180.0;
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       __default__.max_roll_pos = 90.0;
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       Default.abstract_parameters.push_back(AquaTeleopJoyConfig::AbstractParamDescriptionConstPtr(new AquaTeleopJoyConfig::ParamDescription<double>("max_roll_pos", "double", 0, "Analog stick to roll position ratio (deg) [for AP-pos. modes]", "", &AquaTeleopJoyConfig::max_roll_pos)));
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       __param_descriptions__.push_back(AquaTeleopJoyConfig::AbstractParamDescriptionConstPtr(new AquaTeleopJoyConfig::ParamDescription<double>("max_roll_pos", "double", 0, "Analog stick to roll position ratio (deg) [for AP-pos. modes]", "", &AquaTeleopJoyConfig::max_roll_pos)));
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       __min__.max_pitch_pos = -180.0;
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       __max__.max_pitch_pos = 180.0;
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       __default__.max_pitch_pos = 90.0;
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       Default.abstract_parameters.push_back(AquaTeleopJoyConfig::AbstractParamDescriptionConstPtr(new AquaTeleopJoyConfig::ParamDescription<double>("max_pitch_pos", "double", 0, "Analog stick to pitch position ratio (deg) [for AP-pos. modes]", "", &AquaTeleopJoyConfig::max_pitch_pos)));
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       __param_descriptions__.push_back(AquaTeleopJoyConfig::AbstractParamDescriptionConstPtr(new AquaTeleopJoyConfig::ParamDescription<double>("max_pitch_pos", "double", 0, "Analog stick to pitch position ratio (deg) [for AP-pos. modes]", "", &AquaTeleopJoyConfig::max_pitch_pos)));
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       __min__.max_yaw_pos = -180.0;
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       __max__.max_yaw_pos = 180.0;
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       __default__.max_yaw_pos = 180.0;
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       Default.abstract_parameters.push_back(AquaTeleopJoyConfig::AbstractParamDescriptionConstPtr(new AquaTeleopJoyConfig::ParamDescription<double>("max_yaw_pos", "double", 0, "Analog stick to yaw position ratio (deg) [UNUSED]", "", &AquaTeleopJoyConfig::max_yaw_pos)));
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       __param_descriptions__.push_back(AquaTeleopJoyConfig::AbstractParamDescriptionConstPtr(new AquaTeleopJoyConfig::ParamDescription<double>("max_yaw_pos", "double", 0, "Analog stick to yaw position ratio (deg) [UNUSED]", "", &AquaTeleopJoyConfig::max_yaw_pos)));
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       __min__.min_depth = -2.0;
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       __max__.min_depth = 1.0;
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       __default__.min_depth = 0.0;
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       Default.abstract_parameters.push_back(AquaTeleopJoyConfig::AbstractParamDescriptionConstPtr(new AquaTeleopJoyConfig::ParamDescription<double>("min_depth", "double", 0, "Minimum depth (m) [for AP-depth-reg. modes]", "", &AquaTeleopJoyConfig::min_depth)));
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       __param_descriptions__.push_back(AquaTeleopJoyConfig::AbstractParamDescriptionConstPtr(new AquaTeleopJoyConfig::ParamDescription<double>("min_depth", "double", 0, "Minimum depth (m) [for AP-depth-reg. modes]", "", &AquaTeleopJoyConfig::min_depth)));
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       __min__.max_depth = 0.0;
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       __max__.max_depth = 100.0;
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       __default__.max_depth = 100.0;
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       Default.abstract_parameters.push_back(AquaTeleopJoyConfig::AbstractParamDescriptionConstPtr(new AquaTeleopJoyConfig::ParamDescription<double>("max_depth", "double", 0, "Maximum depth (m) [for AP-depth-reg. modes]", "", &AquaTeleopJoyConfig::max_depth)));
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       __param_descriptions__.push_back(AquaTeleopJoyConfig::AbstractParamDescriptionConstPtr(new AquaTeleopJoyConfig::ParamDescription<double>("max_depth", "double", 0, "Maximum depth (m) [for AP-depth-reg. modes]", "", &AquaTeleopJoyConfig::max_depth)));
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       __min__.default_fixed_depth = -1.0;
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       __max__.default_fixed_depth = 10.0;
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       __default__.default_fixed_depth = -1.0;
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       Default.abstract_parameters.push_back(AquaTeleopJoyConfig::AbstractParamDescriptionConstPtr(new AquaTeleopJoyConfig::ParamDescription<double>("default_fixed_depth", "double", 0, "Use fixed initial depth upon entering depth-related modes [if < 0, then initial depth is current robot depth]", "", &AquaTeleopJoyConfig::default_fixed_depth)));
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       __param_descriptions__.push_back(AquaTeleopJoyConfig::AbstractParamDescriptionConstPtr(new AquaTeleopJoyConfig::ParamDescription<double>("default_fixed_depth", "double", 0, "Use fixed initial depth upon entering depth-related modes [if < 0, then initial depth is current robot depth]", "", &AquaTeleopJoyConfig::default_fixed_depth)));
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       __min__.max_roll_vel = -1800.0;
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       __max__.max_roll_vel = 1800.0;
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       __default__.max_roll_vel = 450.0;
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       Default.abstract_parameters.push_back(AquaTeleopJoyConfig::AbstractParamDescriptionConstPtr(new AquaTeleopJoyConfig::ParamDescription<double>("max_roll_vel", "double", 0, "Analog stick to roll velocity ratio (deg/s) [for AP-pos. modes]", "", &AquaTeleopJoyConfig::max_roll_vel)));
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       __param_descriptions__.push_back(AquaTeleopJoyConfig::AbstractParamDescriptionConstPtr(new AquaTeleopJoyConfig::ParamDescription<double>("max_roll_vel", "double", 0, "Analog stick to roll velocity ratio (deg/s) [for AP-pos. modes]", "", &AquaTeleopJoyConfig::max_roll_vel)));
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       __min__.max_pitch_vel = -1800.0;
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       __max__.max_pitch_vel = 1800.0;
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       __default__.max_pitch_vel = 450.0;
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       Default.abstract_parameters.push_back(AquaTeleopJoyConfig::AbstractParamDescriptionConstPtr(new AquaTeleopJoyConfig::ParamDescription<double>("max_pitch_vel", "double", 0, "Analog stick to pitch velocity ratio (deg/s) [for AP-pos. modes]", "", &AquaTeleopJoyConfig::max_pitch_vel)));
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       __param_descriptions__.push_back(AquaTeleopJoyConfig::AbstractParamDescriptionConstPtr(new AquaTeleopJoyConfig::ParamDescription<double>("max_pitch_vel", "double", 0, "Analog stick to pitch velocity ratio (deg/s) [for AP-pos. modes]", "", &AquaTeleopJoyConfig::max_pitch_vel)));
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       __min__.max_yaw_vel = -1800.0;
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       __max__.max_yaw_vel = 1800.0;
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       __default__.max_yaw_vel = 900.0;
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       Default.abstract_parameters.push_back(AquaTeleopJoyConfig::AbstractParamDescriptionConstPtr(new AquaTeleopJoyConfig::ParamDescription<double>("max_yaw_vel", "double", 0, "Analog stick to yaw velocity ratio (deg/s) [for AP-pos. modes]", "", &AquaTeleopJoyConfig::max_yaw_vel)));
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       __param_descriptions__.push_back(AquaTeleopJoyConfig::AbstractParamDescriptionConstPtr(new AquaTeleopJoyConfig::ParamDescription<double>("max_yaw_vel", "double", 0, "Analog stick to yaw velocity ratio (deg/s) [for AP-pos. modes]", "", &AquaTeleopJoyConfig::max_yaw_vel)));
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       __min__.max_depth_vel = -10.0;
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       __max__.max_depth_vel = 10.0;
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       __default__.max_depth_vel = 3.0;
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       Default.abstract_parameters.push_back(AquaTeleopJoyConfig::AbstractParamDescriptionConstPtr(new AquaTeleopJoyConfig::ParamDescription<double>("max_depth_vel", "double", 0, "Analog stick to depth velocity ratio (m/s) [for AP-pos. modes]", "", &AquaTeleopJoyConfig::max_depth_vel)));
-//#line 259 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 273 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       __param_descriptions__.push_back(AquaTeleopJoyConfig::AbstractParamDescriptionConstPtr(new AquaTeleopJoyConfig::ParamDescription<double>("max_depth_vel", "double", 0, "Analog stick to depth velocity ratio (m/s) [for AP-pos. modes]", "", &AquaTeleopJoyConfig::max_depth_vel)));
-//#line 233 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 245 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       Default.convertParams();
-//#line 233 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
+//#line 245 "/opt/ros/kinetic/lib/python2.7/dist-packages/dynamic_reconfigure/parameter_generator.py"
       __group_descriptions__.push_back(AquaTeleopJoyConfig::AbstractGroupDescriptionConstPtr(new AquaTeleopJoyConfig::GroupDescription<AquaTeleopJoyConfig::DEFAULT, AquaTeleopJoyConfig>(Default)));
-//#line 353 "/opt/ros/kinetic/share/dynamic_reconfigure/templates/ConfigType.h.template"
+//#line 356 "/opt/ros/kinetic/share/dynamic_reconfigure/templates/ConfigType.h.template"
 
       for (std::vector<AquaTeleopJoyConfig::AbstractGroupDescriptionConstPtr>::const_iterator i = __group_descriptions__.begin(); i != __group_descriptions__.end(); ++i)
       {

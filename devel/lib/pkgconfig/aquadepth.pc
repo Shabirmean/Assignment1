@@ -1,0 +1,8 @@
+prefix=/home/shabirmean/Desktop/COMP765/Assignment1/devel
+
+Name: aquadepth
+Description: Description of aquadepth
+Version: 1.0.0
+Cflags: -I/home/shabirmean/Desktop/COMP765/Assignment1/devel/include
+Libs: -L/home/shabirmean/Desktop/COMP765/Assignment1/devel/lib 
+Requires: aquacore dynamic_reconfigure roscpp rospy std_msgs

@@ -1,0 +1,8 @@
+prefix=/home/shabirmean/Desktop/COMP765/Assignment1/devel
+
+Name: aquaautopilot
+Description: Description of aquaautopilot
+Version: 1.0.0
+Cflags: -I/home/shabirmean/Desktop/COMP765/Assignment1/devel/include
+Libs: -L/home/shabirmean/Desktop/COMP765/Assignment1/devel/lib 
+Requires: aquacore aquadepth roscpp bullet message_runtime geometry_msgs tf
