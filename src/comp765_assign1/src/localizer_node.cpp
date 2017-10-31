@@ -11,7 +11,7 @@
 #define FORWARD_SWIM_SPEED_SCALING 0.1
 #define POSITION_GRAPHIC_RADIUS 20.0
 #define HEADING_GRAPHIC_LENGTH 50.0
-#define PARTICLE_COUNT 10000
+#define PARTICLE_COUNT 1000
 #define SEGMENTS 2
 
 struct noise {
@@ -74,8 +74,8 @@ public:
 
   void initParticles(float forward_noise, float turn_noise, float image_noise){
     for (size_t i = 0; i < PARTICLE_COUNT; i++) {
-        int random_x = rand() % 800;
-        int random_y = rand() % 2520;
+        int random_x = rand() % 800 + (-400);
+        int random_y = rand() % 2520 + (-1260);
         particles[i].particle_location.pose.position.x = random_x;
         particles[i].particle_location.pose.position.y = random_y;
         particles[i].noise_vals.forward_noise = forward_noise;
@@ -148,7 +148,7 @@ public:
     image_diff = (image_diff * 100) / (400 * 400 * 3);
     //std::normal_distribution<double> distribution(image_diff, particle_img_noise);
     //printf("Particle at <%d, %d> Diff is %.2f\n", x_location, y_location, image_diff);
-    return image_diff;
+    return (100 - image_diff);
   }
 
 
@@ -208,15 +208,15 @@ public:
     }
 
     //localization_result_image = map_image.clone();
-    for (size_t i = 0; i < PARTICLE_COUNT; i++) {
-      particle p = particles[i];
-      int x_location = p.particle_location.pose.position.x;
-      int y_location = p.particle_location.pose.position.y;
-      int estimated_robo_image_x = localization_result_image.size().width/2 + METRE_TO_PIXEL_SCALE * x_location;
-      int estimated_robo_image_y = localization_result_image.size().height/2 + METRE_TO_PIXEL_SCALE * y_location;
-      cv::circle( localization_result_image, cv::Point(estimated_robo_image_x, estimated_robo_image_y), POSITION_GRAPHIC_RADIUS, CV_RGB(250,0,0), -1);
-      estimate_pub.publish( estimated_location );
-    }
+    // for (size_t i = 0; i < PARTICLE_COUNT; i++) {
+    //   particle p = particles[i];
+    //   int x_location = p.particle_location.pose.position.x;
+    //   int y_location = p.particle_location.pose.position.y;
+    //   int estimated_robo_image_x = localization_result_image.size().width/2 + METRE_TO_PIXEL_SCALE * x_location;
+    //   int estimated_robo_image_y = localization_result_image.size().height/2 + METRE_TO_PIXEL_SCALE * y_location;
+    //   cv::circle( localization_result_image, cv::Point(estimated_robo_image_x, estimated_robo_image_y), POSITION_GRAPHIC_RADIUS, CV_RGB(250,0,0), -1);
+    //   estimate_pub.publish( estimated_location );
+    // }
   }
 
   // Function motionCommandCallback is a example of how to work with Aqua's motion commands (your view on the odometry).
@@ -247,10 +247,12 @@ public:
     tf::Matrix3x3(target_orientation).getEulerYPR( target_yaw, target_pitch, target_roll );
 
     // The following three lines implement the basic motion model example
-    estimated_location.pose.position.x = estimated_location.pose.position.x + FORWARD_SWIM_SPEED_SCALING * command.pose.position.x * cos( -target_yaw );
-    estimated_location.pose.position.y = estimated_location.pose.position.y + FORWARD_SWIM_SPEED_SCALING * command.pose.position.x * sin( -target_yaw );
-    estimated_location.pose.orientation = command.pose.orientation;
+    //estimated_location.pose.position.x = estimated_location.pose.position.x + FORWARD_SWIM_SPEED_SCALING * command.pose.position.x * cos( -target_yaw );
+    //estimated_location.pose.position.y = estimated_location.pose.position.y + FORWARD_SWIM_SPEED_SCALING * command.pose.position.x * sin( -target_yaw );
+    //estimated_location.pose.orientation = command.pose.orientation;
 
+    int max_weighted_particle = -1;
+    float max_weight = 0.0;
     // Update partiles when you receive a motion update
     for (size_t i = 0; i < PARTICLE_COUNT; i++) {
       particle p = particles[i];
@@ -262,25 +264,33 @@ public:
       particles[i].particle_location.pose.position.x = p_X_loc;
       particles[i].particle_location.pose.position.y = p_Y_loc;
       particles[i].particle_location.pose.orientation = command.pose.orientation;
+
+      if (particles[i].weight > max_weight) {
+        max_weight = particles[i].weight;
+        max_weighted_particle = i;
+      }
     }
 
+    estimated_location.pose.position.x = particles[max_weighted_particle].particle_location.pose.position.x;
+    estimated_location.pose.position.y = particles[max_weighted_particle].particle_location.pose.position.y;
+    estimated_location.pose.orientation = particles[max_weighted_particle].particle_location.pose.orientation;
 
     // The remainder of this function is sample drawing code to plot your answer on the map image.
 
     // This line resets the image to the original map so you can start drawing fresh each time.
     // Comment the one following line to plot your whole trajectory
-    // localization_result_image = map_image.clone();
-    //
-    // int estimated_robo_image_x = localization_result_image.size().width/2 + METRE_TO_PIXEL_SCALE * estimated_location.pose.position.x;
-    // int estimated_robo_image_y = localization_result_image.size().height/2 + METRE_TO_PIXEL_SCALE * estimated_location.pose.position.y;
-    //
-    // int estimated_heading_image_x = estimated_robo_image_x + HEADING_GRAPHIC_LENGTH * cos(-target_yaw);
-    // int estimated_heading_image_y = estimated_robo_image_y + HEADING_GRAPHIC_LENGTH * sin(-target_yaw);
-    //
-    // cv::circle( localization_result_image, cv::Point(estimated_robo_image_x, estimated_robo_image_y), POSITION_GRAPHIC_RADIUS, CV_RGB(250,0,0), -1);
-    // cv::line( localization_result_image, cv::Point(estimated_robo_image_x, estimated_robo_image_y), cv::Point(estimated_heading_image_x, estimated_heading_image_y), CV_RGB(250,0,0), 10);
-    //
-    // estimate_pub.publish( estimated_location );
+    localization_result_image = map_image.clone();
+
+    int estimated_robo_image_x = localization_result_image.size().width/2 + METRE_TO_PIXEL_SCALE * estimated_location.pose.position.x;
+    int estimated_robo_image_y = localization_result_image.size().height/2 + METRE_TO_PIXEL_SCALE * estimated_location.pose.position.y;
+
+    int estimated_heading_image_x = estimated_robo_image_x + HEADING_GRAPHIC_LENGTH * cos(-target_yaw);
+    int estimated_heading_image_y = estimated_robo_image_y + HEADING_GRAPHIC_LENGTH * sin(-target_yaw);
+
+    cv::circle( localization_result_image, cv::Point(estimated_robo_image_x, estimated_robo_image_y), POSITION_GRAPHIC_RADIUS, CV_RGB(250,0,0), -1);
+    cv::line( localization_result_image, cv::Point(estimated_robo_image_x, estimated_robo_image_y), cv::Point(estimated_heading_image_x, estimated_heading_image_y), CV_RGB(250,0,0), 10);
+
+    estimate_pub.publish( estimated_location );
   }
 
   // This function publishes your localization result image and spins ROS to execute its callbacks
