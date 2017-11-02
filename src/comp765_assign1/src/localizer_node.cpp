@@ -6,6 +6,12 @@
 #include <geometry_msgs/PoseStamped.h>
 #include <tf/transform_listener.h>
 
+#include "opencv2/imgcodecs.hpp"
+#include "opencv2/highgui.hpp"
+#include "opencv2/imgproc.hpp"
+
+using namespace std;
+using namespace cv;
 
 #define METRE_TO_PIXEL_SCALE 50
 #define FORWARD_SWIM_SPEED_SCALING 0.1
@@ -176,10 +182,31 @@ public:
     cv_bridge::CvImagePtr rcv_msg = cv_bridge::toCvCopy(robot_img, sensor_msgs::image_encodings::BGR8);
     cv::Mat robot_image_mat = rcv_msg->image;
 
+    // ---------------------------
+
+    Mat result;
+    int result_cols =  map_image.cols - robot_image_mat.cols + 1;
+    int result_rows = map_image.rows - robot_image_mat.rows + 1;
+
+    cout << "Image [X - " << img.cols << "] and [Y - " << img.rows << "]" << endl;
+    cout << "Template [X - " << templ.cols << "] and [Y - " << templ.rows << "]" << endl;
+    cout << "Result [X - " << result_cols << "] and [Y - " << result_rows << "]" << endl;
+
+    result.create( result_rows, result_cols, CV_32FC1 );
+    matchTemplate( map_image, robot_image_mat, result, CV_TM_CCOEFF_NORMED, mask);
+    normalize( result, result, 0, 1, NORM_MINMAX, -1, Mat() );
+
+
     float totalWeight = 0.0;
     for (size_t i = 0; i < PARTICLE_COUNT; i++) {
-        float weight = measurementProbability(particles[i], robot_image_mat);
-        particles[i].weight = weight;
+        int particle_X_loc = particles[i].particle_location.pose.position.x;
+        int particle_Y_loc = particles[i].particle_location.pose.position.y;
+
+        float* rowOfMax = result.ptr<float>(particle_Y_loc - 200);
+        float value = rowOfMax[particle_X_loc - 200];
+
+        //float weight = measurementProbability(particles[i], robot_image_mat);
+        particles[i].weight = value;
         totalWeight += weight;
     }
 
