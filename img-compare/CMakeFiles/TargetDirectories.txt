@@ -1,0 +1,3 @@
+/home/shabirmean/Desktop/COMP765/Assignment1/img-compare/CMakeFiles/edit_cache.dir
+/home/shabirmean/Desktop/COMP765/Assignment1/img-compare/CMakeFiles/rebuild_cache.dir
+/home/shabirmean/Desktop/COMP765/Assignment1/img-compare/CMakeFiles/ImageComparator.dir

@@ -60,8 +60,11 @@ int main( int argc, char** argv )
     
     //! [create_windows]
     /// Create windows
-    namedWindow( image_window, WINDOW_AUTOSIZE );
-    namedWindow( result_window, WINDOW_AUTOSIZE );
+    //namedWindow( image_window, WINDOW_AUTOSIZE );
+    //namedWindow( result_window, WINDOW_AUTOSIZE );
+
+    namedWindow(image_window, WINDOW_NORMAL);
+    namedWindow(result_window, WINDOW_NORMAL);
     //! [create_windows]
     
     //! [create_trackbar]
@@ -144,10 +147,10 @@ void MatchingMethod( int, void* )
     
     //! [imshow]
     /// Show me what you got
-    circle(img_display, Point(376 + 27, 82 + 28), 5, CV_RGB(250,0,0), -1);
+    circle(img_display, Point(matchLoc.x + 27, matchLoc.y + 28), 5, CV_RGB(250,0,0), -1);
     rectangle( img_display, matchLoc, Point( matchLoc.x + templ.cols , matchLoc.y + templ.rows ), Scalar::all(0), 2, 8, 0 );
     rectangle( result, matchLoc, Point( matchLoc.x + templ.cols , matchLoc.y + templ.rows ), Scalar::all(0), 2, 8, 0 );
-    
+
     imshow( image_window, img_display );
     imshow( result_window, result );
     //! [imshow]

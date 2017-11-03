@@ -2,4 +2,4 @@
 source_root_dir = "/home/shabirmean/Desktop/COMP765/Assignment1/src"
 whitelisted_packages = "".split(';') if "" != "" else []
 blacklisted_packages = "".split(';') if "" != "" else []
-underlay_workspaces = "/home/shabirmean/catkin_ws/devel;/home/shabirmean/Desktop/Assignment1/devel;/opt/ros/kinetic".split(';') if "/home/shabirmean/catkin_ws/devel;/home/shabirmean/Desktop/Assignment1/devel;/opt/ros/kinetic" != "" else []
+underlay_workspaces = "/home/shabirmean/Desktop/COMP765/Assignment1/devel;/home/shabirmean/catkin_ws/devel;/opt/ros/kinetic".split(';') if "/home/shabirmean/Desktop/COMP765/Assignment1/devel;/home/shabirmean/catkin_ws/devel;/opt/ros/kinetic" != "" else []

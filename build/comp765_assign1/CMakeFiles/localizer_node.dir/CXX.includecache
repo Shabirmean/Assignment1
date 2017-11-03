@@ -21,6 +21,12 @@ geometry_msgs/PoseStamped.h
 -
 tf/transform_listener.h
 -
+opencv2/imgcodecs.hpp
+/home/shabirmean/Desktop/COMP765/Assignment1/src/comp765_assign1/src/opencv2/imgcodecs.hpp
+opencv2/highgui.hpp
+/home/shabirmean/Desktop/COMP765/Assignment1/src/comp765_assign1/src/opencv2/highgui.hpp
+opencv2/imgproc.hpp
+/home/shabirmean/Desktop/COMP765/Assignment1/src/comp765_assign1/src/opencv2/imgproc.hpp
 
 /opt/ros/kinetic/include/cv_bridge/cv_bridge.h
 sensor_msgs/Image.h

@@ -83,8 +83,12 @@ public:
 
   void initParticles(float forward_noise, float turn_noise, float image_noise){
     for (size_t i = 0; i < PARTICLE_COUNT; i++) {
-        int random_x = rand() % 800 + (-400);
-        int random_y = rand() % 2520 + (-1260);
+        //int random_x = rand() % 800 + (-400);
+        //int random_y = rand() % 2520 + (-1260);
+
+        int random_x = rand() % 800;
+        int random_y = rand() % 2520;
+
         particles[i].particle_location.pose.position.x = random_x;
         particles[i].particle_location.pose.position.y = random_y;
         particles[i].noise_vals.forward_noise = forward_noise;
@@ -188,36 +192,43 @@ public:
     int result_cols =  map_image.cols - robot_image_mat.cols + 1;
     int result_rows = map_image.rows - robot_image_mat.rows + 1;
 
-    cout << "Image [X - " << img.cols << "] and [Y - " << img.rows << "]" << endl;
-    cout << "Template [X - " << templ.cols << "] and [Y - " << templ.rows << "]" << endl;
+    cout << "Image [X - " << map_image.cols << "] and [Y - " << map_image.rows << "]" << endl;
+    cout << "Template [X - " << robot_image_mat.cols << "] and [Y - " << robot_image_mat.rows << "]" << endl;
     cout << "Result [X - " << result_cols << "] and [Y - " << result_rows << "]" << endl;
 
     result.create( result_rows, result_cols, CV_32FC1 );
-    matchTemplate( map_image, robot_image_mat, result, CV_TM_CCOEFF_NORMED, mask);
+    matchTemplate( map_image, robot_image_mat, result, CV_TM_CCOEFF_NORMED);
     normalize( result, result, 0, 1, NORM_MINMAX, -1, Mat() );
 
+    cout << "DONE CALCULATING";
 
     float totalWeight = 0.0;
+    float max_weight = 0.0;
     for (size_t i = 0; i < PARTICLE_COUNT; i++) {
+
         int particle_X_loc = particles[i].particle_location.pose.position.x;
         int particle_Y_loc = particles[i].particle_location.pose.position.y;
 
         float* rowOfMax = result.ptr<float>(particle_Y_loc - 200);
-        float value = rowOfMax[particle_X_loc - 200];
+        float weight = rowOfMax[particle_X_loc - 200];
 
         //float weight = measurementProbability(particles[i], robot_image_mat);
-        particles[i].weight = value;
+        particles[i].weight = weight;
         totalWeight += weight;
+
+        if (particles[i].weight > max_weight) {
+          max_weight = particles[i].weight;
+        }
     }
 
-    float max_weight = 0.0;
+    /*float max_weight = 0.0;
     for (size_t i = 0; i < PARTICLE_COUNT; i++) {
         particles[i].weight = (particles[i].weight / totalWeight);
         //printf("%.8f\n", particles[i].weight);
         if (particles[i].weight > max_weight) {
           max_weight = particles[i].weight;
         }
-    }
+    }*/
 
     particle new_particles[PARTICLE_COUNT];
     std::default_random_engine generator;
@@ -294,15 +305,12 @@ public:
       particle p = particles[i];
       int p_X_loc = p.particle_location.pose.position.x;
       int p_Y_loc = p.particle_location.pose.position.y;
-      
-      p_X_loc /= METRE_TO_PIXEL_SCALE;
-      p_Y_loc /= METRE_TO_PIXEL_SCALE;
 
-      p_X_loc = p_X_loc + FORWARD_SWIM_SPEED_SCALING * command.pose.position.x * cos( -target_yaw );
-      p_Y_loc = p_Y_loc + FORWARD_SWIM_SPEED_SCALING * command.pose.position.x * sin( -target_yaw );
+      p_X_loc = p_X_loc + (METRE_TO_PIXEL_SCALE * FORWARD_SWIM_SPEED_SCALING * command.pose.position.x * cos( -target_yaw ));
+      p_Y_loc = p_Y_loc + (METRE_TO_PIXEL_SCALE * FORWARD_SWIM_SPEED_SCALING * command.pose.position.x * sin( -target_yaw ));
 
-      particles[i].particle_location.pose.position.x = p_X_loc * METRE_TO_PIXEL_SCALE;
-      particles[i].particle_location.pose.position.y = p_Y_loc * METRE_TO_PIXEL_SCALE;
+      particles[i].particle_location.pose.position.x = p_X_loc;
+      particles[i].particle_location.pose.position.y = p_Y_loc;
       particles[i].particle_location.pose.orientation = command.pose.orientation;
 
       if (particles[i].weight > max_weight) {
@@ -322,17 +330,17 @@ public:
     // Comment the one following line to plot your whole trajectory
     localization_result_image = map_image.clone();
 
-    int estimated_robo_image_x = localization_result_image.size().width/2 + estimated_location.pose.position.x;
-    int estimated_robo_image_y = localization_result_image.size().height/2 + estimated_location.pose.position.y;
+    int estimated_robo_image_x = localization_result_image.size().width/2 + estimated_location.pose.position.x - 400;
+    int estimated_robo_image_y = localization_result_image.size().height/2 + estimated_location.pose.position.y - 1260;
 
-    // int estimated_robo_image_x = localization_result_image.size().width/2 + METRE_TO_PIXEL_SCALE * estimated_location.pose.position.x;
-    // int estimated_robo_image_y = localization_result_image.size().height/2 + METRE_TO_PIXEL_SCALE * estimated_location.pose.position.y;
+     //int estimated_robo_image_x = localization_result_image.size().width/2 + METRE_TO_PIXEL_SCALE * estimated_location.pose.position.x;
+     //int estimated_robo_image_y = localization_result_image.size().height/2 + METRE_TO_PIXEL_SCALE * estimated_location.pose.position.y;
 
-    int estimated_heading_image_x = estimated_robo_image_x + HEADING_GRAPHIC_LENGTH * cos(-target_yaw);
-    int estimated_heading_image_y = estimated_robo_image_y + HEADING_GRAPHIC_LENGTH * sin(-target_yaw);
+    //int estimated_heading_image_x = estimated_robo_image_x + HEADING_GRAPHIC_LENGTH * cos(-target_yaw);
+    //int estimated_heading_image_y = estimated_robo_image_y + HEADING_GRAPHIC_LENGTH * sin(-target_yaw);
 
     cv::circle( localization_result_image, cv::Point(estimated_robo_image_x, estimated_robo_image_y), POSITION_GRAPHIC_RADIUS, CV_RGB(250,0,0), -1);
-    cv::line( localization_result_image, cv::Point(estimated_robo_image_x, estimated_robo_image_y), cv::Point(estimated_heading_image_x, estimated_heading_image_y), CV_RGB(250,0,0), 10);
+    //cv::line( localization_result_image, cv::Point(estimated_robo_image_x, estimated_robo_image_y), cv::Point(estimated_heading_image_x, estimated_heading_image_y), CV_RGB(250,0,0), 10);
 
     estimate_pub.publish( estimated_location );
   }
