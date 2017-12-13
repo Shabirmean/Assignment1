@@ -110,26 +110,26 @@ public:
     ros::Rate loop_rate(5);
     while (nh.ok()) {
       for( std::vector<geometry_msgs::PoseStamped>::const_iterator gt_it = gt_traj.begin(); gt_it != gt_traj.end(); gt_it++ ){
-    	  ground_truth_location = *gt_it;
-		  int ground_truth_robo_image_x = drawing_image.size().width/2 + METRE_TO_PIXEL_SCALE * ground_truth_location.pose.position.x;
-		  int ground_truth_robo_image_y = drawing_image.size().height/2 - METRE_TO_PIXEL_SCALE * ground_truth_location.pose.position.y;
+        	ground_truth_location = *gt_it;
+    		  int ground_truth_robo_image_x = drawing_image.size().width/2 + METRE_TO_PIXEL_SCALE * ground_truth_location.pose.position.x;
+    		  int ground_truth_robo_image_y = drawing_image.size().height/2 - METRE_TO_PIXEL_SCALE * ground_truth_location.pose.position.y;
 
-		  double gt_yaw, gt_pitch, gt_roll;
-		  tf::Quaternion gt_orientation;
-		  tf::quaternionMsgToTF(ground_truth_location.pose.orientation, gt_orientation);
-		  tf::Matrix3x3(gt_orientation).getEulerYPR( gt_yaw, gt_pitch, gt_roll );
+    		  double gt_yaw, gt_pitch, gt_roll;
+    		  tf::Quaternion gt_orientation;
+    		  tf::quaternionMsgToTF(ground_truth_location.pose.orientation, gt_orientation);
+    		  tf::Matrix3x3(gt_orientation).getEulerYPR( gt_yaw, gt_pitch, gt_roll );
 
-		  int ground_truth_heading_image_x = ground_truth_robo_image_x + HEADING_GRAPHIC_LENGTH * cos(-gt_yaw);
-		  int ground_truth_heading_image_y = ground_truth_robo_image_y + HEADING_GRAPHIC_LENGTH * sin(-gt_yaw);
+    		  int ground_truth_heading_image_x = ground_truth_robo_image_x + HEADING_GRAPHIC_LENGTH * cos(-gt_yaw);
+    		  int ground_truth_heading_image_y = ground_truth_robo_image_y + HEADING_GRAPHIC_LENGTH * sin(-gt_yaw);
 
-		  cv::circle( drawing_image, cv::Point(ground_truth_robo_image_x, ground_truth_robo_image_y), POSITION_GRAPHIC_RADIUS, CV_RGB(0,0,250), -1);
-		  cv::line( drawing_image, cv::Point(ground_truth_robo_image_x, ground_truth_robo_image_y), cv::Point(ground_truth_heading_image_x, ground_truth_heading_image_y), CV_RGB(0,0,250), 10);
-      }
+    		  cv::circle( drawing_image, cv::Point(ground_truth_robo_image_x, ground_truth_robo_image_y), POSITION_GRAPHIC_RADIUS, CV_RGB(0,0,250), -1);
+    		  cv::line( drawing_image, cv::Point(ground_truth_robo_image_x, ground_truth_robo_image_y), cv::Point(ground_truth_heading_image_x, ground_truth_heading_image_y), CV_RGB(0,0,250), 10);
+        }
 
-      sensor_msgs::ImagePtr msg = cv_bridge::CvImage(std_msgs::Header(), "bgr8", drawing_image).toImageMsg();
-	  pub.publish(msg);
-      ros::spinOnce();
-      loop_rate.sleep();
+        sensor_msgs::ImagePtr msg = cv_bridge::CvImage(std_msgs::Header(), "bgr8", drawing_image).toImageMsg();
+  	    pub.publish(msg);
+        ros::spinOnce();
+        loop_rate.sleep();
     }
   }
 };
