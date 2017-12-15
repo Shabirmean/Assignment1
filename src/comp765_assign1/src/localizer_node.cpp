@@ -14,7 +14,6 @@
 #include "opencv2/highgui.hpp"
 #include "opencv2/calib3d.hpp"
 #include "opencv2/xfeatures2d.hpp"
-// #include <conio.h>
 #include <math.h>
 
 using namespace cv;
@@ -23,14 +22,13 @@ using namespace std;
 
 #define _USE_MATH_DEFINES
 #define METRE_TO_PIXEL_SCALE 50
-#define FORWARD_SWIM_SPEED_SCALING 0.15
+#define FORWARD_SWIM_SPEED_SCALING 0.1
 #define POSITION_GRAPHIC_RADIUS 20.0
-#define HEADING_GRAPHIC_LENGTH 50.0
+#define HEADING_GRAPHIC_LENGTH 25.0
 
-#define PARTICLE_COUNT 500
-#define SEGMENTS 2
-#define FORWARD_NOISE 0.4
-#define TURN_NOISE 0.314  // 10% Noise
+#define PARTICLE_COUNT 1000
+#define FORWARD_NOISE 0.1
+#define TURN_NOISE 0.514  // 10% Noise
 #define SENSE_NOISE 50      
 
 struct PARTICLE_STATE {
@@ -38,10 +36,11 @@ struct PARTICLE_STATE {
   double orientation;
 };
 
-struct NOISE {
-  float motion_noise;
-  float sense_noise;
-};
+// struct NOISE {
+//   float forward_noise;
+//   float turn_noise;
+//   float sense_noise;
+// };
 
 struct UNNORMALIZED_WEIGHTS {
   double distance_weight;
@@ -50,11 +49,9 @@ struct UNNORMALIZED_WEIGHTS {
 
 struct PARTICLE {
   struct PARTICLE_STATE state;
+  // struct NOISE noise_vals;
   struct UNNORMALIZED_WEIGHTS unnormalized_weights;
   double weight;
-  double prev_dist_weight;
-  float swim_speed_scale;
-  NOISE noise_vals;
 };
 
 // Class Localizer is a sample stub that you can build upon for your implementation
@@ -95,39 +92,28 @@ public:
     motion_command_sub = nh.subscribe<geometry_msgs::PoseStamped>("/aqua/target_pose", 1, &Localizer::motionCommandCallback, this);
   
     // initialize particles
-    initParticles(TURN_NOISE, SENSE_NOISE);
-
+    initParticles(FORWARD_NOISE, TURN_NOISE, SENSE_NOISE);
     ROS_INFO( "localizer node constructed and subscribed." );
   }
 
 
-  void initParticles(float motion_noise, float sense_noise){
+  void initParticles(float forward_noise, float turn_noise, float sense_noise){
     std::uniform_real_distribution<double> dist(-M_PI, M_PI);
     std::mt19937 rng; 
     rng.seed(std::random_device{}());
-
-    // std::uniform_real_distribution<double> dist_speed(-M_PI, M_PI);
-    // std::mt19937 rng_speed; 
-    // rng_speed.seed(std::random_device{}());
-
-    // std::default_random_engine generator_forward;
-    // std::normal_distribution<double> distribution_forward(FORWARD_SWIM_SPEED_SCALING, FORWARD_NOISE);
 
     for (size_t i = 0; i < PARTICLE_COUNT; i++) {
         int random_x = rand() % 800;
         int random_y = rand() % 2520;
         double random_yaw = dist(rng);
-        // double speed_scaling_factor = distribution_forward(generator_forward);
 
         particles[i].state.position.x = random_x;
         particles[i].state.position.y = random_y;
         particles[i].state.orientation = random_yaw;
-        particles[i].noise_vals.motion_noise = motion_noise;
-        particles[i].noise_vals.sense_noise = sense_noise;
-
+        // particles[i].noise_vals.forward_noise = forward_noise;
+        // particles[i].noise_vals.turn_noise = turn_noise;
+        // particles[i].noise_vals.sense_noise = sense_noise;
         particles[i].weight = 0.0;
-        particles[i].prev_dist_weight = 0.0;
-        particles[i].swim_speed_scale = FORWARD_SWIM_SPEED_SCALING;
     }
   }
 
@@ -150,6 +136,7 @@ public:
     double total_distance_weight = 0.0;
     double total_unnormalized_weight = 0.0;
     double max_weight = 0.0;
+    PARTICLE particle;
 
     for (size_t i = 0; i < PARTICLE_COUNT; i++) {
       int particle_X_loc = particles[i].state.position.x;
@@ -159,7 +146,7 @@ public:
       double y_diff = sensed_y - particle_Y_loc;
       double eucledean_dist = pow(x_diff, 2) + pow(y_diff, 2);
       eucledean_dist = sqrt(eucledean_dist);
-
+      
       double dis_weight = gaussianProbability(0.0, SENSE_NOISE, eucledean_dist);
       total_distance_weight += dis_weight;
       particles[i].unnormalized_weights.distance_weight = dis_weight;
@@ -168,17 +155,6 @@ public:
     for (size_t i = 0; i < PARTICLE_COUNT; i++) {
       double particle_dis_weight = particles[i].unnormalized_weights.distance_weight;
       double normalized_distance_weight = particle_dis_weight / total_distance_weight;
-
-      double previous_distance_weight = particles[i].prev_dist_weight;
-      double weight_ratio = previous_distance_weight / normalized_distance_weight;
-
-      if (weight_ratio < 0) {
-        particles[i].swim_speed_scale *= 0.9; 
-      } else if (weight_ratio > 1) {
-        particles[i].swim_speed_scale *= 1.1; 
-      }
-      particles[i].prev_dist_weight = normalized_distance_weight;
-      
       double particle_yaw = particles[i].state.orientation;
       double yaw_difference = particle_yaw - sensed_yaw;
       double yaw_weight = gaussianProbability(0.0, TURN_NOISE, yaw_difference);
@@ -252,43 +228,55 @@ public:
     tf::Matrix3x3(target_orientation).getEulerYPR( target_yaw, target_pitch, target_roll );
 
     std::default_random_engine generator_turn;
-    std::normal_distribution<double> distribution_turn(0.0 , TURN_NOISE);
+    std::normal_distribution<double> distribution_turn(target_yaw, TURN_NOISE);
 
-    // std::default_random_engine generator_forward;
-    // std::normal_distribution<double> distribution_forward(FORWARD_SWIM_SPEED_SCALING, FORWARD_NOISE);
-    // double speed_scaling_factor = distribution_forward(generator_forward);
+    std::default_random_engine generator_forward;
+    std::normal_distribution<double> distribution_forward(0.0, FORWARD_NOISE);
 
     int max_weighted_particle = -1;
     double max_weight_particle_yaw = 0.0;
     float max_weight = 0.0;
+    int total_x = 0.0;
+    int total_y = 0.0;
+    double total_yaw = 0.0;
 
     // Update partiles when you receive a motion update
     for (size_t i = 0; i < PARTICLE_COUNT; i++) {
       PARTICLE p = particles[i];
       int p_X_loc = p.state.position.x;
       int p_Y_loc = p.state.position.y;
-      double particle_yaw = p.state.orientation;
-      double motion_noise = distribution_turn(generator_turn);
-      double noisy_turn = target_yaw + motion_noise;
-      particle_yaw = motion_noise + target_yaw;
 
-      double speed_scaling_factor = p.swim_speed_scale;
+      double turn_noise = distribution_turn(generator_turn);
+      double forward_noise = distribution_forward(generator_forward);
       
-      // p_X_loc = (p_X_loc - (localization_result_image.size().width/2)) / METRE_TO_PIXEL_SCALE;
-      // p_Y_loc = (p_Y_loc - (localization_result_image.size().height/2)) / METRE_TO_PIXEL_SCALE;
+      // double particle_yaw = target_yaw + turn_noise;
+      double particle_yaw = turn_noise;
+      double particle_motion = command.pose.position.x + forward_noise;
+      // double particle_motion = forward_noise;
+      // printf("Noise: (%f, %f)\n", command.pose.position.x, forward_noise);
 
-      double motion_units_x = METRE_TO_PIXEL_SCALE * speed_scaling_factor * command.pose.position.x * cos( -particle_yaw );
-      double motion_units_y = METRE_TO_PIXEL_SCALE * speed_scaling_factor * command.pose.position.x * sin( -particle_yaw );
+      // double particle_yaw = turn_noise;
+      // double particle_motion = forward_noise;
+
+      // double motion_units_x = METRE_TO_PIXEL_SCALE * ((FORWARD_SWIM_SPEED_SCALING * particle_motion * cos( -particle_yaw )) + forward_noise);
+      // double motion_units_y = METRE_TO_PIXEL_SCALE * ((FORWARD_SWIM_SPEED_SCALING * particle_motion * sin( -particle_yaw )) + forward_noise);
+
+      double motion_units_x = METRE_TO_PIXEL_SCALE * FORWARD_SWIM_SPEED_SCALING * particle_motion * cos( -particle_yaw );
+      double motion_units_y = METRE_TO_PIXEL_SCALE * FORWARD_SWIM_SPEED_SCALING * particle_motion * sin( -particle_yaw);
+
+      // double motion_units_x = METRE_TO_PIXEL_SCALE * FORWARD_SWIM_SPEED_SCALING * particle_motion * cos( -particle_yaw );
+      // double motion_units_y = METRE_TO_PIXEL_SCALE * FORWARD_SWIM_SPEED_SCALING * particle_motion * sin( -particle_yaw );
 
       p_X_loc = p_X_loc + motion_units_x;
       p_Y_loc = p_Y_loc + motion_units_y;
 
-      // p_X_loc = localization_result_image.size().width/2 + METRE_TO_PIXEL_SCALE * p_X_loc;
-      // p_Y_loc = localization_result_image.size().height/2 + METRE_TO_PIXEL_SCALE * p_Y_loc;
-
       particles[i].state.position.x = p_X_loc;
       particles[i].state.position.y = p_Y_loc;
       particles[i].state.orientation = particle_yaw;
+
+      total_x += p_X_loc;
+      total_y += p_Y_loc;
+      total_yaw += particle_yaw;
 
       if (particles[i].weight > max_weight) {
         max_weight = particles[i].weight;
@@ -297,43 +285,33 @@ public:
       }
     }
 
-    // The following three lines implement the basic motion model example
-    estimated_location.pose.position.x = estimated_location.pose.position.x + FORWARD_SWIM_SPEED_SCALING * command.pose.position.x * cos( -target_yaw );
-    estimated_location.pose.position.y = estimated_location.pose.position.y + FORWARD_SWIM_SPEED_SCALING * command.pose.position.x * sin( -target_yaw );
-    estimated_location.pose.orientation = command.pose.orientation;
-
-    // The remainder of this function is sample drawing code to plot your answer on the map image.
-
     // This line resets the image to the original map so you can start drawing fresh each time.
     // Comment the one following line to plot your whole trajectory
     localization_result_image = map_image.clone();
 
-    // int estimated_robo_image_x = localization_result_image.size().width/2 + METRE_TO_PIXEL_SCALE * estimated_location.pose.position.x;
-    // int estimated_robo_image_y = localization_result_image.size().height/2 + METRE_TO_PIXEL_SCALE * estimated_location.pose.position.y;
-
-    // int estimated_heading_image_x = estimated_robo_image_x + HEADING_GRAPHIC_LENGTH * cos(-target_yaw);
-    // int estimated_heading_image_y = estimated_robo_image_y + HEADING_GRAPHIC_LENGTH * sin(-target_yaw);
-
-    // cv::circle( localization_result_image, cv::Point(estimated_robo_image_x, estimated_robo_image_y), POSITION_GRAPHIC_RADIUS, CV_RGB(250,0,0), -1);
-    // cv::line( localization_result_image, cv::Point(estimated_robo_image_x, estimated_robo_image_y), cv::Point(estimated_heading_image_x, estimated_heading_image_y), CV_RGB(250,0,0), 10);
-    // cv::circle( localization_result_image, cv::Point(robot_sensed_coord_x, robot_sensed_coord_y), POSITION_GRAPHIC_RADIUS, CV_RGB(92,255,76), -1);
-
-    for (size_t i = 0; i < PARTICLE_COUNT; i++) {
+    // for (size_t i = 0; i < PARTICLE_COUNT; i++) {
+      size_t i = max_weighted_particle;
       PARTICLE p = particles[i];
       int p_X_loc = p.state.position.x;
       int p_Y_loc = p.state.position.y;
       double p_yaw = p.state.orientation;
+
+      // printf("BEST Vs Average [(%d, %d, %f) , (%d, %d, %f)] \n",p_X_loc, p_Y_loc, p_yaw, (total_x / PARTICLE_COUNT), (total_y / PARTICLE_COUNT), (total_yaw / PARTICLE_COUNT));
 
       int particle_heading_image_x = p_X_loc + HEADING_GRAPHIC_LENGTH * cos(-p_yaw);
       int particle_heading_image_y = p_Y_loc + HEADING_GRAPHIC_LENGTH * sin(-p_yaw);
 
       cv::circle( localization_result_image, cv::Point(p_X_loc, p_Y_loc), 10, CV_RGB(92,255,76), -1);
       cv::line( localization_result_image, cv::Point(p_X_loc, p_Y_loc), cv::Point(particle_heading_image_x, particle_heading_image_y), CV_RGB(250,0,0), 10);
-    }
+    // }
 
-    // estimated_location.pose.position.x = particles[max_weighted_particle].state.position.x - (localization_result_image.size().width/2 / METRE_TO_PIXEL_SCALE);
-    // estimated_location.pose.position.y = particles[max_weighted_particle].state.position.y - (localization_result_image.size().height/2 / METRE_TO_PIXEL_SCALE);
-    // estimated_location.pose.orientation.z = particles[max_weighted_particle].state.orientation;
+    // estimated_location.pose.position.x = ((total_x / PARTICLE_COUNT) - localization_result_image.size().width/2) * (double(1.0) / METRE_TO_PIXEL_SCALE);
+    // estimated_location.pose.position.y = ((total_y / PARTICLE_COUNT) - localization_result_image.size().height/2) * (double(1.0) / METRE_TO_PIXEL_SCALE);
+    // estimated_location.pose.orientation = tf::createQuaternionMsgFromRollPitchYaw(0.0f, 0.0f, (total_yaw / PARTICLE_COUNT));
+
+    estimated_location.pose.position.x = (particles[max_weighted_particle].state.position.x - localization_result_image.size().width/2) * (double(1.0) / METRE_TO_PIXEL_SCALE);
+    estimated_location.pose.position.y = (particles[max_weighted_particle].state.position.y - localization_result_image.size().height/2) * (double(1.0) / METRE_TO_PIXEL_SCALE);
+    estimated_location.pose.orientation = tf::createQuaternionMsgFromRollPitchYaw(0.0f, 0.0f, max_weight_particle_yaw);
     estimate_pub.publish( estimated_location );
   }
 
