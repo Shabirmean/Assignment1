@@ -26,9 +26,9 @@ using namespace std;
 #define POSITION_GRAPHIC_RADIUS 20.0
 #define HEADING_GRAPHIC_LENGTH 25.0
 
-#define PARTICLE_COUNT 1000
+#define PARTICLE_COUNT 2000
 #define FORWARD_NOISE 0.1
-#define TURN_NOISE 0.514  // 10% Noise
+#define TURN_NOISE 0.314  // 10% Noise
 #define SENSE_NOISE 50      
 
 struct PARTICLE_STATE {
@@ -132,6 +132,11 @@ public:
     float sensed_x = robot_sensed_pos.x;
     float sensed_y = robot_sensed_pos.y;
     double sensed_yaw = new_state.orientation;
+
+    if (sensed_x == -1 || sensed_y == -1 || sensed_yaw == 0) {
+      printf("No matching image found\n");
+      return;
+    }
 
     double total_distance_weight = 0.0;
     double total_unnormalized_weight = 0.0;
@@ -372,6 +377,14 @@ public:
       scene.push_back( keypoints_scene[ good_matches[i].trainIdx ].pt );
     }
     Mat H = findHomography( obj, scene, RANSAC );
+    
+    if (H.empty()) {
+      struct PARTICLE_STATE new_state;
+      new_state.position = Point2f(-1, -1);
+      new_state.orientation = 0;
+      return new_state;
+    }
+
     Vec3f eulerAngles = rotationMatrixToEulerAngles(H);
     double sensed_yaw = convertYawFromCameraPoseToROSPlane(eulerAngles[2]);
 
